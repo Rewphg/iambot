@@ -9,7 +9,9 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/Rewphg/iambot/src/api"
 	"github.com/Rewphg/iambot/src/logger/debug"
+	"github.com/joho/godotenv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -28,6 +30,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func main() {
+
 	if err := debug.InitDebugLogger(); err != nil {
 		log.Fatal(err)
 	}
@@ -45,22 +48,17 @@ func main() {
 		}
 	}()
 
+	//Load Env
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		e.Logger.Fatalf("crashed: %v\n", err)
+	}
+
 	e.HTTPErrorHandler = customHTTPErrorHandler
-	// e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-	// 	return func(c echo.Context) error {
-	// 		// Extract the credentials from HTTP request header and perform a security
-	// 		// check
 
-	// 		// For invalid credentials
-	// 		return echo.NewHTTPError(http.StatusUnauthorized, "Please provide valid credentials")
+	e.POST("/webhook", api.ResLine)
 
-	// 		// For valid credentials call next
-	// 		// return next(c)
-	// 	}
-	// })
-
-	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds.
-	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 

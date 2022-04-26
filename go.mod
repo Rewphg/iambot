@@ -4,7 +4,9 @@ go 1.18
 
 require (
 	github.com/go-playground/validator/v10 v10.10.1
+	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.7.2
+	github.com/line/line-bot-sdk-go/v7 v7.14.0
 )
 
 require (
