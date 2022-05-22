@@ -6,6 +6,7 @@ import (
 
 	"github.com/Rewphg/iambot/src/action"
 	"github.com/Rewphg/iambot/src/data"
+	"github.com/Rewphg/iambot/src/validation"
 	"github.com/labstack/echo/v4"
 )
 
@@ -21,10 +22,9 @@ func ResLine(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	// if err, ans := validation.SignatureValidation(c.Request().Header.Get("x-line-signature"), body); err != nil || !ans {
-	// 	log.Println(ans)
-	// 	return err
-	// }
+	if err, ans := validation.SignatureValidation(c.Request().Header.Get("x-line-signature"), c); err != nil || !ans {
+		log.Printf("Error Validate, %v, %v \n", err, ans)
+	}
 
 	UserInfo, err := action.GetUserData(body.Event[0].Source.UserID)
 

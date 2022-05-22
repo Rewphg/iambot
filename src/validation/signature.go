@@ -4,34 +4,32 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/Rewphg/iambot/src/data"
 	"github.com/labstack/echo/v4"
 )
 
-func SignatureValidation(header string, body data.EventPost) (error, bool) {
+func SignatureValidation(header string, req echo.Context) (error, bool) {
+	defer req.Request().Body.Close()
+	body, err := ioutil.ReadAll(req.Request().Body)
 
-	strBody, err := json.Marshal(body)
+	log.Println(body)
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error()), false
+		log.Println(err)
+		return err, false
 	}
-
-	log.Println((string(strBody)))
-	log.Println(strBody)
 
 	decoded, err := base64.StdEncoding.DecodeString(header)
 	if err != nil {
 		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error()), false
 	}
-
-	hash := hmac.New(sha256.New, []byte(os.Getenv("Channel_Secret")))
-	hash.Write([]byte(string(strBody)))
+	hash := hmac.New(sha256.New, []byte("<channel secret>"))
+	hash.Write(body)
 
 	ans := hmac.Equal(decoded, hash.Sum(nil))
 
