@@ -14,18 +14,22 @@ func ResLine(c echo.Context) error {
 
 	body := new(data.EventPost)
 
+	//bind Body into struct
 	if err := c.Bind(body); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	//Validator
 	if err := c.Validate(body); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	//Validator from line
 	if err, ans := validation.SignatureValidation(c.Request().Header.Get("x-line-signature"), c); err != nil || !ans {
 		log.Printf("Error Validate, %v, %v \n", err, ans)
 	}
 
+	//Get User Data
 	UserInfo, err := action.GetUserData(body.Event[0].Source.UserID)
 
 	if err != nil {
