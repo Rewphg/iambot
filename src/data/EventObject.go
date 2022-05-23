@@ -27,6 +27,8 @@ type MessageObj struct {
 }
 
 type sourceObj struct {
-	Type   string `json:"type" validate:"required"`
-	UserID string `json:"userID" validate:"required"`
+	Type   	string 	`json:"type" validate:"required"`
+	UserID 	string 	`json:"userID" validate:"required"`
+	GroupID string	`json:"groupID"`
+	RoomID	string	`json:"roomID"`
 }
