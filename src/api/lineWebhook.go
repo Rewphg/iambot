@@ -36,7 +36,7 @@ func ResLine(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	log.Printf("Recieve Message < %s > from User : < %s >, in < %v > \n", body.Event[0].Message.Text, UserInfo.DisplayName, body.Event[0].Source.Type)
+	log.Printf("Recieve Message < %s > from User : < %s >, in < %v > , id : < %s >\n", body.Event[0].Message.Text, UserInfo.DisplayName, body.Event[0].Source.Type, UserInfo.UserID)
 
 	if err := TypeRedirector(*body); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
