@@ -58,6 +58,7 @@ func main() {
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	e.POST("/webhook", api.ResLine)
+	e.GET("/", api.Ping)
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)

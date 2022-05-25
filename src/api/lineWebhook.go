@@ -44,3 +44,9 @@ func ResLine(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, "OK")
 }
+
+func Ping(c echo.Context) error {
+	log.Println("Being Ping")
+
+	return c.JSON(http.StatusOK, "OK")
+}
